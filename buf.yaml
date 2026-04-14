@@ -1,0 +1,5 @@
+version: v2
+modules:
+  - path: proto
+    name: buf.build/adiom/commandargs
+  - path: example/proto

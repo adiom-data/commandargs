@@ -1,0 +1,88 @@
+syntax = "proto3";
+package myapp;
+
+option go_package = "github.com/adiom-data/commandargs/gen/myapp;myapp";
+
+import "commandargs/v1/options.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+message Root {
+  option (commandargs.v1.command) = {
+    name: "myapp"
+    description: "My application"
+  };
+
+  string config = 1 [(commandargs.v1.flag) = {
+    name: "config"
+    usage: "Path to config file"
+    category: "Global"
+    aliases: ["c"]
+  }];
+
+  CommonFlags common = 2;
+  ServerFlags server = 3;
+
+  repeated string tags = 4 [(commandargs.v1.flag) = {
+    usage: "Tags to apply"
+  }];
+
+  repeated int32 retry_codes = 5 [(commandargs.v1.flag) = {
+    usage: "HTTP status codes to retry"
+  }];
+
+  repeated google.protobuf.Duration intervals = 6 [(commandargs.v1.flag) = {
+    usage: "Retry intervals"
+  }];
+}
+
+message CommonFlags {
+  bool verbose = 1 [(commandargs.v1.flag) = {
+    usage: "Enable verbose output"
+    aliases: ["v"]
+  }];
+
+  string log_level = 2 [(commandargs.v1.flag) = {
+    usage: "Log level"
+    default: "info"
+    allowed_values: ["debug", "info", "warn", "error"]
+  }];
+}
+
+message Server {
+  option (commandargs.v1.command) = {
+    name: "server"
+    description: "Server commands"
+  };
+
+  ServerFlags flags = 1;
+}
+
+message ServerFlags {
+  string host = 1 [(commandargs.v1.flag) = {
+    usage: "Server host"
+    default: "localhost"
+  }];
+
+  int32 port = 2 [(commandargs.v1.flag) = {
+    usage: "Server port"
+    default: "8080"
+    aliases: ["p"]
+  }];
+
+  google.protobuf.Duration timeout = 3 [(commandargs.v1.flag) = {
+    usage: "Request timeout"
+    default: "30s"
+    aliases: ["t"]
+  }];
+
+  google.protobuf.Timestamp start_time = 4 [(commandargs.v1.flag) = {
+    usage: "Start time (RFC3339)"
+  }];
+
+  google.protobuf.Int32Value max_retries = 5 [(commandargs.v1.flag) = {
+    usage: "Max retries"
+    default: "3"
+  }];
+}

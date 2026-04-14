@@ -1,0 +1,34 @@
+syntax = "proto3";
+package commandargs.v1;
+
+option go_package = "github.com/adiom-data/commandargs/gen/commandargs/v1;commandargsv1";
+
+import "google/protobuf/descriptor.proto";
+
+message CommandOptions {
+  string name = 1;
+  string description = 2;
+  repeated string aliases = 3;
+  string usage = 4;
+  bool hidden = 5;
+  string category = 6;
+}
+
+message FlagOptions {
+  string name = 1;
+  string usage = 2;
+  string default = 3;
+  bool required = 4;
+  bool hidden = 5;
+  string category = 6;
+  repeated string aliases = 7;
+  repeated string allowed_values = 8;
+}
+
+extend google.protobuf.MessageOptions {
+  CommandOptions command = 50000;
+}
+
+extend google.protobuf.FieldOptions {
+  FlagOptions flag = 50000;
+}
